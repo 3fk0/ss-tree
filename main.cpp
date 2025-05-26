@@ -3,44 +3,40 @@
 #include <fstream>
 
 #include "inc/SStree.h"
+#include "src/parser/csv_parser.h"
+#include "src/input/input_control.h"
 
-Point gib_point(int start) {
-    Point p(25);
-    for (int i = 0; i < 25; ++i) {
-        p[i] = static_cast<float>(start + i) / 100.0f;  // Values from 0.00 to 0.99
-    }
-    return p;
-}
+int main(int argc, char *argv[]) {
 
-int main() {
-    SsTree tree(25);
+    std::vector<input_operation> operations = parse_input(argc, argv);
+    int dimensions = get_dimensionality(operations[0].vector_file);
+    SsTree tree = SsTree(dimensions);
 
-    std::cout << "Begin\n";
+    for (const auto &op : operations) {
+        std::cout << "Operation: " << op.type << std::endl;
+        std::cout << "Vector file: " << op.vector_file << std::endl;
 
-    for (int i = 0; i < 25; ++i) {
-        Point p = gib_point(i);
-        std::cout << "Inserting: " << p << "\n";
-        tree.insert(p, std::to_string(i));
+        std::vector<Point> points = parse_csv(op.vector_file, dimensions);
 
-        if ((i + 1) % 10 == 0) {
-            std::cout << (i + 1) << ": " << "\n";
-            tree.print();
-            tree.test();
+        switch (op.type) {
+            case INSERT:
+                for (int i = 0; i < points.size(); ++i) {
+                    std::cout << "Inserting: " << points[i] << "\n";
+                    tree.insert(points[i], std::to_string(i));
+                }
+                break;
+            case QUERY:
+                for (int i = 0; i < points.size(); ++i) {
+                    std::cout << "Querying for: " << points[i] << "\n";
+                    auto results = tree.kNNQuery(points[i], 5);
+                    std::cout << "Results:\n";
+                    for (const auto &result : results) {
+                        std::cout << result << "\n";
+                    }
+                }
+                break;
         }
     }
 
-    
-    std::cout << "End\n";
-    tree.print();
-    tree.test();
-    
-    tree.saveToFile("tree.dat");
-    
-    Point query_point = gib_point(10);
-    std::cout << "Querying for: " << query_point << "\n";
-    auto results = tree.kNNQuery(query_point, 5);
-    std::cout << "Results:\n";
-    for (const auto &result : results) {
-        std::cout << result << "\n";
-    }
+    return 0;
 }
