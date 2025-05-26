@@ -1,4 +1,12 @@
+# Files with no extension (typically executables)
+*
+!*/
+!*.*
+
 # Project exclude paths
 /cmake-build-debug/
 /img/
 /.idea/
+
+# Build artifacts
+*.dat
