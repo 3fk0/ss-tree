@@ -7,7 +7,11 @@ int get_dimensionality(const std::string &filename) {
     }
 
     std::string line;
-    if (std::getline(file, line)) {
+    while (std::getline(file, line)) {
+        if (line[0] == '#') {
+            continue; // Skip comment lines
+        }
+
         std::stringstream ss(line);
         std::string value;
 
@@ -34,7 +38,6 @@ std::vector<Point> parse_csv(const std::string &filename, int dimension) {
     
     std::string line;
     while (std::getline(file, line)) {
-        std::cout << "Parsing line: " << line << "\n";
         if (line[0] == '#') {
             continue; // Skip comment lines
         }
