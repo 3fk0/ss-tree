@@ -2,9 +2,11 @@
 
 std::vector<input_operation> parse_input(int argc, char* argv[]) {
     if (argc < 2) {
+        help();
         throw std::runtime_error("[Input Control]: Not enough arguments");
     }
     if (argc % 2 == 0) {
+        help();
         throw std::runtime_error("[Input Control]: Arguments must be in pairs");
     }
 

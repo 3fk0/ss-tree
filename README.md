@@ -3,7 +3,7 @@
 Compile the binary
 
 ```ssh
-g++ -std=c++17 -I. -Iinc main.cpp src/SStree.cpp src/parser/*  -o ss-tree
+make
 ```
 
 Finally, call the executable
