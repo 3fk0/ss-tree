@@ -2,6 +2,7 @@
 *
 !*/
 !*.*
+!Makefile
 
 # Project exclude paths
 /cmake-build-debug/
@@ -10,3 +11,4 @@
 
 # Build artifacts
 *.dat
+obj
