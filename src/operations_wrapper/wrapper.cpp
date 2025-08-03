@@ -16,28 +16,44 @@ void insert(std::vector<Point> &points, SsTree &tree, int insertID) {
     std::cout << "Insert time: " 
               << std::chrono::duration_cast<std::chrono::nanoseconds>(tn - ts).count() 
               << " nanoseconds\n";
-    tree.saveToFile("ss-tree_INSERT_" + std::to_string(insertID));
+    std::string filename = "ss-tree_INSERT_" + std::to_string(insertID);
+    tree.saveToFile(filename);
+    printTreeSize(filename, "insert", insertID);
 }
 
 void query(const std::vector<Point> &points, const SsTree &tree, int queryID) {
     std::chrono::high_resolution_clock::time_point ts, tn;
     
-    for (int i = 0; i < points.size(); ++i) {
-        std::cout << "Query " << queryID << "." << i << std::endl;
-        ts = std::chrono::high_resolution_clock::now();
-        
-        auto results = tree.kNNQuery(points[i], 10);
+    for (int k = 1; k <= 100; k += 5) {
+        for (int i = 0; i < points.size(); ++i) {
+            std::cout << "Query " << queryID << "." << i << "." << (k == 0 ? 1 : k) << std::endl;
+            ts = std::chrono::high_resolution_clock::now();
 
-        tn = std::chrono::high_resolution_clock::now();
+            auto results = tree.kNNQuery(points[i], k == 0 ? 1 : k);
 
-        for (const auto &result : results) {
-            std::cout << result << "\n";
+            tn = std::chrono::high_resolution_clock::now();
+
+            for (const auto &result : results) {
+                std::cout << result << "\n";
+            }
+
+            std::cout << "Query time: " 
+                    << std::chrono::duration_cast<std::chrono::nanoseconds>(tn - ts).count() 
+                    << " nanoseconds\n";
         }
-
-        std::cout << "Query time: " 
-                  << std::chrono::duration_cast<std::chrono::nanoseconds>(tn - ts).count() 
-                  << " nanoseconds\n";
-        tree.saveToFile("ss-tree_QUERY_" + std::to_string(queryID) + "." + std::to_string(i));
     }
+}
 
+void printTreeSize(std::string filename, std::string operation, int id) {
+    std::ifstream infile(filename, std::ios::binary | std::ios::ate);
+    if (infile) {
+        std::streamsize size = infile.tellg();
+        std::cout << "Size: " << size << " after " << operation << " - " << id << "\n";
+        infile.close();
+        if (std::remove(filename.c_str()) != 0) {
+            std::cerr << "Error deleting file.\n";
+        }
+    } else {
+        std::cerr << "Error opening file: " << filename << "\n";
+    }
 }

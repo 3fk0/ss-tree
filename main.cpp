@@ -13,20 +13,19 @@ int main(int argc, char *argv[]) {
     int dimensions = get_dimensionality(operations[0].vector_file);
     SsTree tree = SsTree(dimensions);
 
+    int queryID = 0;
+    int insertID = 0;
+
     for (int i = 0; i < operations.size(); ++i) {
         input_operation &op = operations[i];
-
-        std::cout << "Operation: " << op.type << std::endl;
-        std::cout << "Vector file: " << op.vector_file << std::endl;
-
         std::vector<Point> points = parse_csv(op.vector_file, dimensions);
 
         switch (op.type) {
             case INSERT:
-                insert(points, tree, i);
+                insert(points, tree, insertID++);
                 break;
             case QUERY:
-                query(points, tree, i);
+                query(points, tree, queryID++);
                 break;
         }
     }
