@@ -631,7 +631,7 @@ std::vector<std::string> SsTree::kNNQuery(const Point &center, size_t k) const {
             compare};
     this->kNNQuery(center, k, this->root, NType::max_value(), result);
     std::vector<std::string> points;
-    for (int i = 0; i < k; ++i) {
+    for (int i = 0; i < std::min<size_t>(k, result.size()); ++i) {
         points.push_back(result.top().second.second);
         result.pop();
     }
