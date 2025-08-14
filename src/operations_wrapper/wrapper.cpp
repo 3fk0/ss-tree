@@ -1,5 +1,19 @@
 #include "wrapper.h"
 
+void printTreeSize(std::string filename, std::string operation, int id) {
+    std::ifstream infile(filename, std::ios::binary | std::ios::ate);
+    if (infile) {
+        std::streamsize size = infile.tellg();
+        std::cout << "Size: " << size << " after " << operation << " - " << id << "\n";
+        infile.close();
+        if (std::remove(filename.c_str()) != 0) {
+            std::cerr << "Error deleting file.\n";
+        }
+    } else {
+        std::cerr << "Error opening file: " << filename << "\n";
+    }
+}
+
 void insert(std::vector<Point> &points, SsTree &tree, int insertID) {
     std::cout << "Insert " << insertID << std::endl;
 
@@ -41,19 +55,5 @@ void query(const std::vector<Point> &points, const SsTree &tree, int queryID) {
                     << std::chrono::duration_cast<std::chrono::nanoseconds>(tn - ts).count() 
                     << " nanoseconds\n";
         }
-    }
-}
-
-void printTreeSize(std::string filename, std::string operation, int id) {
-    std::ifstream infile(filename, std::ios::binary | std::ios::ate);
-    if (infile) {
-        std::streamsize size = infile.tellg();
-        std::cout << "Size: " << size << " after " << operation << " - " << id << "\n";
-        infile.close();
-        if (std::remove(filename.c_str()) != 0) {
-            std::cerr << "Error deleting file.\n";
-        }
-    } else {
-        std::cerr << "Error opening file: " << filename << "\n";
     }
 }
