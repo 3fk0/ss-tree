@@ -36,7 +36,7 @@ void insert(std::vector<Point> &points, SsTree &tree) {
 void query(const std::vector<Point> &points, const SsTree &tree) {
     std::chrono::high_resolution_clock::time_point ts, tn;
     
-    for (int k = 1; k <= 100; k += 5) {
+    for (int k = 0; k <= 100; k += 5) {
         for (int i = 0; i < points.size(); ++i) {
             std::cout << "Query " << i << "." << (k == 0 ? 1 : k) << std::endl;
             ts = std::chrono::high_resolution_clock::now();
@@ -45,13 +45,14 @@ void query(const std::vector<Point> &points, const SsTree &tree) {
 
             tn = std::chrono::high_resolution_clock::now();
 
+            std::cout << "Query time: " 
+                    << std::chrono::duration_cast<std::chrono::nanoseconds>(tn - ts).count() 
+                    << " nanoseconds\n";
+
             for (const auto &result : results) {
                 std::cout << result << "\n";
             }
 
-            std::cout << "Query time: " 
-                    << std::chrono::duration_cast<std::chrono::nanoseconds>(tn - ts).count() 
-                    << " nanoseconds\n";
         }
     }
 }
