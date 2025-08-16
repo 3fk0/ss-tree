@@ -1,10 +1,10 @@
 #include "wrapper.h"
 
-void printTreeSize(std::string filename, std::string operation, int id) {
+void printTreeSize(std::string filename, std::string operation) {
     std::ifstream infile(filename, std::ios::binary | std::ios::ate);
     if (infile) {
         std::streamsize size = infile.tellg();
-        std::cout << "Size: " << size << " after " << operation << " - " << id << "\n";
+        std::cout << "Size: " << size << " after " << operation << "\n";
         infile.close();
         if (std::remove(filename.c_str()) != 0) {
             std::cerr << "Error deleting file.\n";
@@ -14,9 +14,7 @@ void printTreeSize(std::string filename, std::string operation, int id) {
     }
 }
 
-void insert(std::vector<Point> &points, SsTree &tree, int insertID) {
-    std::cout << "Insert " << insertID << std::endl;
-
+void insert(std::vector<Point> &points, SsTree &tree) {
     std::chrono::high_resolution_clock::time_point ts, tn;
 
     ts = std::chrono::high_resolution_clock::now();
@@ -30,17 +28,17 @@ void insert(std::vector<Point> &points, SsTree &tree, int insertID) {
     std::cout << "Insert time: " 
               << std::chrono::duration_cast<std::chrono::nanoseconds>(tn - ts).count() 
               << " nanoseconds\n";
-    std::string filename = "ss-tree_INSERT_" + std::to_string(insertID);
+    std::string filename = "ss-tree";
     tree.saveToFile(filename);
-    printTreeSize(filename, "insert", insertID);
+    printTreeSize(filename, "insert");
 }
 
-void query(const std::vector<Point> &points, const SsTree &tree, int queryID) {
+void query(const std::vector<Point> &points, const SsTree &tree) {
     std::chrono::high_resolution_clock::time_point ts, tn;
     
     for (int k = 1; k <= 100; k += 5) {
         for (int i = 0; i < points.size(); ++i) {
-            std::cout << "Query " << queryID << "." << i << "." << (k == 0 ? 1 : k) << std::endl;
+            std::cout << "Query " << i << "." << (k == 0 ? 1 : k) << std::endl;
             ts = std::chrono::high_resolution_clock::now();
 
             auto results = tree.kNNQuery(points[i], k == 0 ? 1 : k);
