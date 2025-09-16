@@ -28,7 +28,7 @@ void insert(std::vector<Point> &points, SsTree &tree) {
     std::cout << "Insert time: " 
               << std::chrono::duration_cast<std::chrono::nanoseconds>(tn - ts).count() 
               << " nanoseconds\n";
-    std::string filename = "ss-tree";
+    std::string filename = "/tmp/ss-tree";
     tree.saveToFile(filename);
     printTreeSize(filename, "insert");
 }
