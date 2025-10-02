@@ -5,4 +5,4 @@
 
 void insert(std::vector<Point> &points, SsTree &tree);
 
-void query(const std::vector<Point> &points, const SsTree &tree);
+void query(const std::vector<Point> &points, std::vector<int> ks_to_query, const SsTree &tree);
